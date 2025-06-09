@@ -255,7 +255,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
                             },
                         ]}
                     >
-                        <Text style={styles.title}>Invoice Manager</Text>
+                        <Text style={styles.title}>GM - SHARQIYA</Text>
                         <Text style={styles.subtitle}>إدارة الفواتير</Text>
                     </Animated.View>
 
@@ -295,7 +295,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#1A202C", // Dark background - مريح جداً للعين
+        backgroundColor: "#1A202C",
         justifyContent: "center",
         alignItems: "center",
     },

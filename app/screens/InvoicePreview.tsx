@@ -79,30 +79,160 @@ export default function InvoicePreview() {
             }
 
             const html = `
-            <html dir="rtl">
-                <head>
-                    <meta charset="utf-8" />
-                    <style>
-                        body { font-family: sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #1A202C; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-                        .total { font-weight: bold; color: #1A202C; }
-                    </style>
-                </head>
-                <body>
-                    <h1>فاتورة</h1>
-                    <p><strong>العميل:</strong> ${customerName}</p>
-                    <p><strong>رقم الفاتورة:</strong> ${invoiceNumber}</p>
-                    <p><strong>تاريخ الإصدار:</strong> ${invoiceDate}</p>
-
-                    <h3>العناصر:</h3>
-                    <table>
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>فاتورة ${invoiceNumber}</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { 
+                    font-family: 'Cairo', sans-serif; 
+                    background-color: #f5f7fa; 
+                    padding: 20px; 
+                }
+                .invoice-container { 
+                    max-width: 800px; 
+                    margin: 20px auto; 
+                    background: #ffffff; 
+                    border-radius: 15px; 
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+                    overflow: hidden;
+                }
+                .header { 
+                    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); 
+                    color: white; 
+                    padding: 30px 40px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .logo-section { display: flex; align-items: center; gap: 15px; }
+                .logo { 
+                    width: 60px; 
+                    height: 60px; 
+                    background: white; 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                }
+                .logo-text { font-size: 22px; font-weight: bold; color: #e53e3e; }
+                .company-info h1 { font-size: 26px; margin: 0; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+                .company-info p { opacity: 0.9; font-size: 14px; margin-top: 4px; }
+                .invoice-title h2 { font-size: 28px; margin: 0; text-align: left; }
+                .invoice-title p { font-size: 14px; opacity: 0.9; text-align: left; margin-top: 4px; }
+                .content { padding: 30px 40px; }
+                .invoice-details { 
+                    display: grid; 
+                    grid-template-columns: 1fr 1fr; 
+                    gap: 30px; 
+                    margin-bottom: 40px; 
+                }
+                .detail-card h3 { 
+                    color: #c53030; 
+                    margin-bottom: 15px; 
+                    font-size: 18px; 
+                    padding-bottom: 10px;
+                    border-bottom: 2px solid #e53e3e;
+                }
+                .detail-item { margin-bottom: 10px; display: flex; justify-content: space-between; }
+                .detail-label { color: #555; font-weight: 600; }
+                .detail-value { color: #333; font-weight: 400; }
+                .section-title { font-size: 20px; color: #333; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+                .items-table { width: 100%; border-collapse: collapse; }
+                .items-table thead { background-color: #f8f9fa; }
+                .items-table th { 
+                    padding: 15px; 
+                    text-align: right; 
+                    font-weight: 700; 
+                    color: #333;
+                    border-bottom: 2px solid #dee2e6;
+                }
+                .items-table td { padding: 15px; text-align: right; border-bottom: 1px solid #eef2f7; }
+                .items-table tr:last-child td { border-bottom: none; }
+                .items-table th:nth-child(2), .items-table td:nth-child(2),
+                .items-table th:nth-child(3), .items-table td:nth-child(3),
+                .items-table th:nth-child(4), .items-table td:nth-child(4) { text-align: center; }
+                .total-section {
+                    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+                    color: white;
+                    padding: 20px 30px;
+                    border-radius: 12px;
+                    text-align: center;
+                    margin-top: 30px;
+                }
+                .total-label {
+                    font-size: 16px;
+                    opacity: 0.9;
+                    margin-bottom: 5px;
+                }
+                .total-amount {
+                    font-size: 32px;
+                    font-weight: 700;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.25);
+                }
+                .footer { 
+                    text-align: center; 
+                    padding: 30px 40px; 
+                    background: #f8f9fa; 
+                    border-top: 1px solid #dee2e6; 
+                    color: #777;
+                }
+                .closing-signature { 
+                    font-weight: 600; 
+                    color: #c53030; 
+                    font-size: 16px; 
+                }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-container">
+                <div class="header">
+                    <div class="logo-section">
+                        <div class="logo"><span class="logo-text">GM</span></div>
+                        <div class="company-info">
+                            <h1>GM - SHARQIYA</h1>
+                            <p>شركة شرقية - صنع في مصر</p>
+                        </div>
+                    </div>
+                    <div class="invoice-title">
+                        <h2>فاتورة</h2>
+                        <p>رقم: ${invoiceNumber}</p>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="invoice-details">
+                        <div class="detail-card">
+                            <h3>بيانات العميل</h3>
+                            <div class="detail-item">
+                                <span class="detail-label">الاسم:</span>
+                                <span class="detail-value">${customerName || "غير محدد"}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">رقم الهاتف:</span>
+                                <span class="detail-value">${phoneNumber || "---"}</span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <h3>تفاصيل الفاتورة</h3>
+                            <div class="detail-item">
+                                <span class="detail-label">تاريخ الإصدار:</span>
+                                <span class="detail-value">${new Date(invoiceDate).toLocaleDateString("ar-EG")}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="section-title">قائمة الأصناف</h3>
+                    <table class="items-table">
                         <thead>
                             <tr>
                                 <th>الصنف</th>
                                 <th>السعر</th>
                                 <th>الكمية</th>
+                                <th>الإجمالي</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -111,18 +241,28 @@ export default function InvoicePreview() {
                                     (item) => `
                                 <tr>
                                     <td>${item.name}</td>
-                                    <td>${item.price.toFixed(2)} جنيه</td>
+                                    <td style="direction: ltr;">${item.price.toFixed(2)} ج.م</td>
                                     <td>${item.quantity}</td>
-                                </tr>`,
+                                    <td style="direction: ltr;">${(item.price * item.quantity).toFixed(2)} ج.م</td>
+                                </tr>
+                            `,
                                 )
                                 .join("")}
                         </tbody>
                     </table>
-
-                    <p class="total">الإجمالي: ${total.toFixed(2)} جنيه</p>
-                    <p style="text-align: center; margin-top: 40px;">شكراً لتعاملكم معنا</p>
-                </body>
-            </html>`;
+                    <div class="total-section">
+                        <div class="total-label">إجمالي المبلغ المستحق</div>
+                        <div class="total-amount" style="direction: ltr;">${total.toFixed(2)} جنيه</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="closing-signature">
+                        GM-SHARQIYA
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>`;
 
             const { uri } = await Print.printToFileAsync({ html });
 
