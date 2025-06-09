@@ -39,15 +39,15 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
     const itemsHtml = items
         .map(
             (item) => `
-            <tr>
-                <td data-label="الصنف">${item.name}</td>
-                <td data-label="السعر" style="direction: ltr;">${item.price.toFixed(2)} ج.م</td>
-                <td data-label="الكمية">${item.quantity}</td>
-                <td data-label="الإجمالي" style="direction: ltr;">${(
-                    item.price * item.quantity
-                ).toFixed(2)} ج.م</td>
-            </tr>
-        `,
+                <tr>
+                    <td data-label="الصنف">${item.name}</td>
+                    <td data-label="السعر">${item.price.toFixed(2)} ج.م</td>
+                    <td data-label="الكمية">${item.quantity}</td>
+                    <td data-label="الإجمالي">${(
+                        item.price * item.quantity
+                    ).toFixed(2)} ج.م</td>
+                </tr>
+            `,
         )
         .join("");
 
@@ -60,7 +60,7 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
             <title>فاتورة ${invoiceNumber}</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-              * { margin: 0; padding: 0; box-sizing: border-box; }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
                 body { 
                     font-family: 'Cairo', sans-serif; 
                     background-color: #f5f7fa; 
@@ -83,17 +83,18 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
                     justify-content: space-between;
                     align-items: center;
                 }
-                .logo-section { display: flex; align-items: center; gap: 15px; }
+                .logo-section { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
                 .logo { 
                     width: 60px; height: 60px; background: white; border-radius: 50%; 
                     display: flex; align-items: center; justify-content: center; 
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.2); flex-shrink: 0;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 }
                 .logo-text { font-size: 22px; font-weight: bold; color: #e53e3e; }
-                .company-info h1 { font-size: 26px; margin: 0; font-weight: 700; text-shadow: 1px 1px 3px   rgba(0,0,0,0.2); }
+                .company-info { text-align: left; }
+                .company-info h1 { font-size: 26px; margin: 0; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
                 .company-info p { opacity: 0.9; font-size: 14px; margin-top: 4px; }
-                .invoice-title h2 { font-size: 28px; margin: 0; text-align: left; }
-                .invoice-title p { font-size: 14px; opacity: 0.9; text-align: left; margin-top: 4px; }
+                .invoice-title h2 { font-size: 28px; margin: 0; text-align: right; }
+                .invoice-title p { font-size: 14px; opacity: 0.9; text-align: right; margin-top: 4px; }
                 .content { padding: 30px 40px; }
                 .invoice-details { 
                     display: grid; grid-template-columns: 1fr 1fr; 
@@ -103,10 +104,13 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
                     color: #c53030; margin-bottom: 15px; font-size: 18px; 
                     padding-bottom: 10px; border-bottom: 2px solid #e53e3e;
                 }
-                .detail-item { margin-bottom: 10px; display: flex; justify-content: space-between;   font-size: 15px; }
+                .detail-item { 
+                    margin-bottom: 10px; display: flex; justify-content: flex-start;
+                    align-items: baseline; gap: 8px;
+                }
                 .detail-label { color: #555; font-weight: 600; }
                 .detail-value { color: #333; font-weight: 400; }
-                .section-title { font-size: 20px; color: #333; margin-bottom: 20px; border-bottom: 2px solid   #eee; padding-bottom: 10px;}
+                .section-title { font-size: 20px; color: #333; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;}
                 .items-table { width: 100%; border-collapse: collapse; }
                 .items-table thead { background-color: #f8f9fa; }
                 .items-table th { 
@@ -118,78 +122,111 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
                 .items-table th:nth-child(2), .items-table td:nth-child(2),
                 .items-table th:nth-child(3), .items-table td:nth-child(3),
                 .items-table th:nth-child(4), .items-table td:nth-child(4) { text-align: center; }
-                .total-section {
-                    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
-                    color: white; padding: 20px 30px; border-radius: 12px;
-                    text-align: center; margin-top: 30px;
+                
+                .summary-section {
+                    margin-top: 30px; padding-top: 20px;
+                    border-top: 2px solid #eef2f7; text-align: left;
                 }
-                .total-label { font-size: 16px; opacity: 0.9; margin-bottom: 5px; }
-                .total-amount { font-size: 32px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.  25); }
+                .summary-item {
+                    display: flex; justify-content: space-between;
+                    padding: 8px 0; font-size: 16px;
+                }
+                .summary-label { color: #555; font-weight: 600; }
+                .summary-value { color: #333; font-weight: 400; direction: ltr; }
+                .grand-total .summary-label { font-size: 18px; color: #333; }
+                .grand-total .summary-value { font-size: 22px; font-weight: 700; color: #333; }
+                .thank-you-note {
+                    text-align: right; margin-top: 25px;
+                    font-style: italic; color: #777;
+                }
                 .footer { 
-                    text-align: center; padding: 30px 40px; background: #f8f9fa; 
-                    border-top: 1px solid #dee2e6; color: #777;
+                    text-align: center; padding: 30px 40px; 
+                    background: #f8f9fa; border-top: 1px solid #dee2e6; color: #777;
                 }
                 .closing-signature { font-weight: 600; color: #c53030; font-size: 16px; }
-    
+
                 @media (max-width: 768px) {
                     body { padding: 0; font-size: 14px; }
                     .invoice-container { margin: 0; border-radius: 0; box-shadow: none; }
                     .header { 
-                        flex-direction: column; gap: 15px; padding: 20px;
+                        flex-direction: column; gap: 20px; padding: 20px;
                         align-items: flex-start;
                     }
-                    .invoice-title { text-align: right; align-self: flex-end; }
-                    .invoice-title h2, .invoice-title p { text-align: right; }
-                    
-                    .company-info h1 { font-size: 20px; }
-                    .company-info p { font-size: 13px; }
-                    .invoice-title h2 { font-size: 22px; }
-                    .invoice-title p { font-size: 13px; }
-                    .detail-card h3 { font-size: 17px; }
-                    .detail-item { font-size: 14px; }
-                    .section-title { font-size: 18px; }
-                    .total-label { font-size: 15px; }
-                    .total-amount { font-size: 26px; }
-                    .closing-signature { font-size: 14px; }
-    
+                    .company-info h1 { font-size: 22px; }
+                    .invoice-title h2 { font-size: 24px; }
                     .content { padding: 20px; }
-                    .invoice-details { grid-template-columns: 1fr; gap: 20px; }
-    
+                    .invoice-details { grid-template-columns: 1fr; gap: 25px; }
+                    .detail-card h3 { font-size: 17px; }
+                    .section-title { font-size: 18px; }
+                    .grand-total .summary-label { font-size: 16px; }
+                    .grand-total .summary-value { font-size: 20px; }
+                    
                     .items-table thead { display: none; }
+                    
                     .items-table tr {
-                        display: block; margin-bottom: 15px; border: 1px solid #dee2e6;
-                        border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-between;
+                        margin-bottom: 15px;
+                        border: 1px solid #dee2e6;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                        padding: 12px;
                     }
                     .items-table td {
-                        display: flex; justify-content: space-between; text-align: right;
-                        padding: 12px 15px; border-bottom: 1px solid #eef2f7;
+                        display: block;
+                        text-align: center;
+                        padding: 5px;
+                        border-bottom: none;
                         font-size: 14px;
-                    }
-                    .items-table td::before {
-                        content: attr(data-label); font-weight: 600; color: #555;
                     }
                     .items-table td[data-label="السعر"],
                     .items-table td[data-label="الإجمالي"] {
-                        flex-direction: row-reverse;
+                        direction: ltr;
                     }
-                    .items-table td:nth-child(n) { text-align: right; }
-                .items-table tr:last-child td:last-child { border-bottom: none; }
+                    .items-table td::before {
+                        content: attr(data-label);
+                        font-weight: 600;
+                        color: #555;
+                        display: block;
+                        font-size: 12px;
+                        margin-bottom: 5px;
+                    }
+                    .items-table td:first-child {
+                        flex-basis: 100%;
+                        text-align: right;
+                        font-weight: 700;
+                        font-size: 16px;
+                        color: #c53030;
+                        padding-bottom: 8px;
+                        border-bottom: 1px solid #eef2f7;
+                        margin-bottom: 8px;
+                    }
+                    .items-table td:first-child::before {
+                        display: none; 
+                    }
+                    .items-table td:nth-child(2),
+                    .items-table td:nth-child(3),
+                    .items-table td:nth-child(4) {
+                        flex-basis: 32%;
+                    }
                 }
             </style>
         </head>
         <body>
             <div class="invoice-container">
                 <div class="header">
+                    <div class="invoice-title">
+                        <h2>فاتورة</h2>
+                        <p>رقم: ${invoiceNumber}</p>
+                    </div>
                     <div class="logo-section">
                         <div class="logo"><span class="logo-text">GM</span></div>
                         <div class="company-info">
                             <h1>GM - SHARQIYA</h1>
                             <p>شركة شرقية - صنع في مصر</p>
                         </div>
-                    </div>
-                    <div class="invoice-title">
-                        <h2>فاتورة</h2>
-                        <p>رقم: ${invoiceNumber}</p>
                     </div>
                 </div>
                 <div class="content">
@@ -209,9 +246,7 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
                             <h3>تفاصيل الفاتورة</h3>
                             <div class="detail-item">
                                 <span class="detail-label">تاريخ الإصدار:</span>
-                                <span class="detail-value">${new Date(
-                                    date,
-                                ).toLocaleDateString("ar-EG")}</span>
+                                <span class="detail-value">${new Date(date).toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })}</span>
                             </div>
                         </div>
                     </div>
@@ -229,12 +264,14 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
                             ${itemsHtml}
                         </tbody>
                     </table>
-                    <div class="total-section">
-                        <div class="total-label">إجمالي المبلغ المستحق</div>
-                        <div class="total-amount" style="direction: ltr;">${amount.toFixed(
-                            2,
-                        )} جنيه</div>
+                    
+                    <div class="summary-section">
+                        <div class="summary-item grand-total">
+                            <span class="summary-label">الإجمالي النهائي المستحق</span>
+                            <span class="summary-value">${amount.toFixed(2)} ج.م</span>
+                        </div>
                     </div>
+
                 </div>
                 <div class="footer">
                     <div class="closing-signature">
@@ -246,7 +283,6 @@ const generateInvoiceHtml = (invoice: Invoice): string => {
         </html>`;
     return html;
 };
-
 const shareInvoicePdf = async (invoice: Invoice) => {
     const html = generateInvoiceHtml(invoice);
     try {
